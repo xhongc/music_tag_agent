@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-PORT="${OPENCODE_PORT:-4096}"
+PORT="${OPENCODE_PORT:-9002}"
 HOSTNAME="${OPENCODE_HOSTNAME:-0.0.0.0}"
 
 set -- serve --port "$PORT" --hostname "$HOSTNAME"

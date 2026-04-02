@@ -7,7 +7,7 @@ services:
       test:
         - CMD-SHELL
         - >-
-          body="$$(wget -q -O - http://127.0.0.1:$${OPENCODE_PORT:-4096}/global/health)" &&
+          body="$$(wget -q -O - http://127.0.0.1:$${OPENCODE_PORT:-9002}/global/health)" &&
           printf '%s' "$$body" | grep -Eq '"healthy"[[:space:]]*:[[:space:]]*true' &&
           printf '%s' "$$body" | grep -Eq '"version"[[:space:]]*:[[:space:]]*"[^"]+"'
       interval: 30s

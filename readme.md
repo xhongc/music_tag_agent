@@ -116,14 +116,14 @@ docker buildx build \
 ### 运行容器
 
 ```bash
-docker run --rm -p 4096:4096 \
+docker run --rm -p 9002:9002 \
   -e OPENCODE_SERVER_PASSWORD=your-password \
   ai_story-agent
 ```
 
 ### 可选环境变量
 
-- `OPENCODE_PORT`：服务监听端口，默认 `4096`
+- `OPENCODE_PORT`：服务监听端口，默认 `9002`
 - `OPENCODE_HOSTNAME`：服务监听地址，默认 `0.0.0.0`
 - `OPENCODE_CORS`：以逗号分隔的 CORS 来源列表，例如 `http://localhost:5173,https://app.example.com`
 - `OPENCODE_MDNS`：设置为任意非空值时启用 `--mdns`
@@ -134,8 +134,8 @@ docker run --rm -p 4096:4096 \
 ### 示例
 
 ```bash
-docker run --rm -p 4096:4096 \
-  -e OPENCODE_PORT=4096 \
+docker run --rm -p 9002:9002 \
+  -e OPENCODE_PORT=9002 \
   -e OPENCODE_HOSTNAME=0.0.0.0 \
   -e OPENCODE_CORS=http://localhost:5173,https://app.example.com \
   -e OPENCODE_SERVER_PASSWORD=your-password \

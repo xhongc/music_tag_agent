@@ -45,7 +45,7 @@ RUN set -eu; \
 
 FROM ${ALPINE_IMAGE}
 
-ENV OPENCODE_PORT=4096 \
+ENV OPENCODE_PORT=9002 \
     OPENCODE_HOSTNAME=0.0.0.0
 
 RUN apk add --no-cache ca-certificates libgcc libstdc++ \
