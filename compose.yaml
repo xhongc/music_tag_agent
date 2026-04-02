@@ -1,0 +1,26 @@
+services:
+  opencode-serve:
+    image: ai_story-agent:latest
+    container_name: ai_story-agent
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          body="$$(wget -q -O - http://127.0.0.1:$${OPENCODE_PORT:-4096}/global/health)" &&
+          printf '%s' "$$body" | grep -Eq '"healthy"[[:space:]]*:[[:space:]]*true' &&
+          printf '%s' "$$body" | grep -Eq '"version"[[:space:]]*:[[:space:]]*"[^"]+"'
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    ports:
+      - "${OPENCODE_PORT:-4096}:${OPENCODE_PORT:-4096}"
+    environment:
+      OPENCODE_PORT: ${OPENCODE_PORT:-4096}
+      OPENCODE_HOSTNAME: ${OPENCODE_HOSTNAME:-0.0.0.0}
+      OPENCODE_CORS: ${OPENCODE_CORS:-}
+      OPENCODE_MDNS: ${OPENCODE_MDNS:-}
+      OPENCODE_MDNS_DOMAIN: ${OPENCODE_MDNS_DOMAIN:-}
+      OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:-}
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-}
