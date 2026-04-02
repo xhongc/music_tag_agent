@@ -98,6 +98,8 @@ docker buildx build \
   .
 ```
 
+普通 `docker build` 时如果没有显式传入 `TARGETARCH`，`Dockerfile` 也会回退到 `uname -m` 自动识别当前构建架构。
+
 ### 运行容器
 
 ```bash

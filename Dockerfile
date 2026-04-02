@@ -7,7 +7,15 @@ ARG TARGETARCH
 ENV OPENCODE_VERSION=1.3.13
 
 RUN set -eu; \
-    case "$TARGETARCH" in \
+    arch="${TARGETARCH:-}"; \
+    if [ -z "$arch" ]; then \
+      case "$(uname -m)" in \
+        x86_64|amd64) arch=amd64 ;; \
+        aarch64|arm64) arch=arm64 ;; \
+        *) echo "Unable to detect target arch from uname -m: $(uname -m)" >&2; exit 1 ;; \
+      esac; \
+    fi; \
+    case "$arch" in \
       amd64) \
         npm install -g "opencode-linux-x64-musl@${OPENCODE_VERSION}" || npm install -g "opencode-linux-x64-baseline-musl@${OPENCODE_VERSION}"; \
         ;; \
@@ -15,7 +23,7 @@ RUN set -eu; \
         npm install -g "opencode-linux-arm64-musl@${OPENCODE_VERSION}"; \
         ;; \
       *) \
-        echo "Unsupported TARGETARCH: $TARGETARCH" >&2; \
+        echo "Unsupported TARGETARCH: $arch" >&2; \
         exit 1; \
         ;; \
     esac
