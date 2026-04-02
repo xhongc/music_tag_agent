@@ -89,12 +89,25 @@ docker build -t ai_story-agent .
 
 ### 多架构构建
 
-使用 Buildx 可以构建 `linux/amd64` 和 `linux/arm64` 多架构镜像：
+使用 Buildx 可以构建 `linux/amd64` 和 `linux/arm64` 多架构镜像。
+
+本地测试单架构镜像：
+
+```bash
+docker buildx build \
+  --platform linux/amd64 \
+  -t ai_story-agent:latest \
+  --load \
+  .
+```
+
+推送多架构镜像到仓库：
 
 ```bash
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  -t ai_story-agent:latest \
+  -t your-registry/ai_story-agent:latest \
+  --push \
   .
 ```
 

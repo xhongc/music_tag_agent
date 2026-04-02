@@ -15,12 +15,14 @@ services:
       start_period: 15s
       retries: 3
     ports:
-      - "${OPENCODE_PORT:-4096}:${OPENCODE_PORT:-4096}"
+      - "${OPENCODE_PORT:-9002}:${OPENCODE_PORT:-9002}"
     environment:
-      OPENCODE_PORT: ${OPENCODE_PORT:-4096}
+      OPENCODE_PORT: ${OPENCODE_PORT:-9002}
       OPENCODE_HOSTNAME: ${OPENCODE_HOSTNAME:-0.0.0.0}
       OPENCODE_CORS: ${OPENCODE_CORS:-}
       OPENCODE_MDNS: ${OPENCODE_MDNS:-}
       OPENCODE_MDNS_DOMAIN: ${OPENCODE_MDNS_DOMAIN:-}
       OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:-}
       OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-}
+    volumes:
+     - /Users/macbookair/coding/compose/ai_story_config/opencode.json:/home/opencode/.config/opencode/opencode.json 
