@@ -51,11 +51,12 @@ ENV OPENCODE_PORT=9002 \
 RUN apk add --no-cache ca-certificates libgcc libstdc++ \
     && addgroup -S opencode \
     && adduser -S -G opencode -h /home/opencode opencode \
-    && mkdir -p /home/opencode/app \
+    && mkdir -p /home/opencode/app /home/opencode/.config/opencode \
     && chown -R opencode:opencode /home/opencode
 
 COPY --from=builder /tmp/opencode-musl /usr/local/bin/opencode
 COPY start-opencode-serve.sh /usr/local/bin/start-opencode-serve.sh
+COPY --chown=opencode:opencode .opencode/skills /home/opencode/.config/opencode/skills
 
 RUN chmod +x /usr/local/bin/opencode /usr/local/bin/start-opencode-serve.sh
 

@@ -1,7 +1,7 @@
 services:
   opencode-serve:
-    image: ai_story-agent:latest
-    container_name: ai_story-agent
+    image: music_tag_agent:latest
+    container_name: music_tag_agent
     restart: unless-stopped
     healthcheck:
       test:
@@ -25,4 +25,5 @@ services:
       OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:-}
       OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-}
     volumes:
-     - /Users/macbookair/coding/compose/ai_story_config/opencode.json:/home/opencode/.config/opencode/opencode.json 
+     - /Users/macbookair/coding/compose/ai_story_config/opencode_mtw.json:/home/opencode/.config/opencode/opencode.json 
+     - /Users/macbookair/coding/music_tag_agent:/home/opencode/app
