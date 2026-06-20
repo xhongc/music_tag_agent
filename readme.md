@@ -131,7 +131,7 @@ docker run --rm -p 9002:9002 \
 - `OPENCODE_SERVER_PASSWORD`：启用 Basic Auth
 - `OPENCODE_SERVER_USERNAME`：自定义 Basic Auth 用户名
 
-### 示例
+### 示例1
 
 ```bash
 docker run --rm -p 9002:9002 \
