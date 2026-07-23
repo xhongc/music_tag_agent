@@ -63,6 +63,6 @@ RUN chmod +x /usr/local/bin/opencode /usr/local/bin/start-opencode-serve.sh
 WORKDIR /home/opencode/app
 USER opencode
 
-EXPOSE 4096
+EXPOSE 9002
 
 CMD ["/usr/local/bin/start-opencode-serve.sh"]
