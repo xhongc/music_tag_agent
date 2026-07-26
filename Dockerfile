@@ -54,11 +54,11 @@ RUN apk add --no-cache ca-certificates libgcc libstdc++ \
     && mkdir -p /home/opencode/app /home/opencode/.config/opencode \
     && chown -R opencode:opencode /home/opencode
 
-COPY --from=builder /tmp/opencode-musl /usr/local/bin/opencode
-COPY start-opencode-serve.sh /usr/local/bin/start-opencode-serve.sh
+COPY --from=builder --chmod=755 /tmp/opencode-musl /usr/local/bin/opencode
+COPY --chmod=755 start-opencode-serve.sh /usr/local/bin/start-opencode-serve.sh
 COPY --chown=opencode:opencode .opencode/skills /home/opencode/.config/opencode/skills
-
-RUN chmod +x /usr/local/bin/opencode /usr/local/bin/start-opencode-serve.sh
+COPY --chown=opencode:opencode knowledge /home/opencode/app/knowledge
+COPY --chown=opencode:opencode AGENTS.md /home/opencode/app/AGENTS.md
 
 WORKDIR /home/opencode/app
 USER opencode

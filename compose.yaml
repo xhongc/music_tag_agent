@@ -26,4 +26,4 @@ services:
       OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-}
     volumes:
      - /Users/macbookair/coding/compose/ai_story_config/opencode_mtw.json:/home/opencode/.config/opencode/opencode.json 
-     - /Users/macbookair/coding/music_tag_agent:/home/opencode/app
+    #  - /Users/macbookair/coding/music_tag_agent:/home/opencode/app
