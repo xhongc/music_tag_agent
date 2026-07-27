@@ -130,6 +130,18 @@ docker run --rm -p 9002:9002 \
 - `OPENCODE_MDNS_DOMAIN`：对应 `--mdns-domain`
 - `OPENCODE_SERVER_PASSWORD`：启用 Basic Auth
 - `OPENCODE_SERVER_USERNAME`：自定义 Basic Auth 用户名
+- `OPENCODE_CONFIG_FILE`：配置文件写入路径，默认 `/home/opencode/.config/opencode/opencode.json`
+- `OPENCODE_CONFIG_TEMPLATE`：配置模板，默认 `compatible`；也支持 `openai-compatible`
+- `OPENCODE_PROVIDER_ID`：provider key，默认 `myprovider`
+- `OPENCODE_PROVIDER_NPM`：provider npm 包，默认 `@ai-sdk/openai-compatible`
+- `OPENCODE_PROVIDER_NAME`：provider 显示名称，默认等于 `OPENCODE_PROVIDER_ID`
+- `OPENCODE_PROVIDER_BASE_URL`：provider API 地址
+- `OPENCODE_PROVIDER_API_KEY`：provider API Key，直接写入 `options.apiKey`
+- `OPENCODE_PROVIDER_AUTHORIZATION`：可选，写入 `headers.Authorization`；默认不写入 `headers`
+- `OPENCODE_MODEL_ID`：model key，默认 `my-model-name`
+- `OPENCODE_MODEL_NAME`：model 显示名称，默认等于 `OPENCODE_MODEL_ID`
+- `OPENCODE_MODEL_CONTEXT`：可选，上下文限制；默认不写入 `limit`
+- `OPENCODE_MODEL_OUTPUT`：可选，输出限制；默认不写入 `limit`
 
 ### 示例1
 
@@ -139,6 +151,17 @@ docker run --rm -p 9002:9002 \
   -e OPENCODE_HOSTNAME=0.0.0.0 \
   -e OPENCODE_CORS=http://localhost:5173,https://app.example.com \
   -e OPENCODE_SERVER_PASSWORD=your-password \
+  ai_story-agent
+```
+
+### 通过固定模板生成 `opencode.json`
+
+```bash
+docker run --rm -p 9002:9002 \
+  -e OPENCODE_PROVIDER_ID=myprovider \
+  -e OPENCODE_PROVIDER_BASE_URL=https://api.myprovider.com/v1 \
+  -e OPENCODE_PROVIDER_API_KEY=your-api-key \
+  -e OPENCODE_MODEL_ID=my-model-name \
   ai_story-agent
 ```
 
@@ -178,11 +201,33 @@ docker compose down
 - `OPENCODE_MDNS_DOMAIN`
 - `OPENCODE_SERVER_USERNAME`
 - `OPENCODE_SERVER_PASSWORD`
+- `OPENCODE_CONFIG_FILE`
+- `OPENCODE_CONFIG_TEMPLATE`
+- `OPENCODE_PROVIDER_ID`
+- `OPENCODE_PROVIDER_NPM`
+- `OPENCODE_PROVIDER_NAME`
+- `OPENCODE_PROVIDER_BASE_URL`
+- `OPENCODE_PROVIDER_API_KEY`
+- `OPENCODE_PROVIDER_AUTHORIZATION`
+- `OPENCODE_MODEL_ID`
+- `OPENCODE_MODEL_NAME`
+- `OPENCODE_MODEL_CONTEXT`
+- `OPENCODE_MODEL_OUTPUT`
 
 例如：
 
 ```bash
 export OPENCODE_SERVER_PASSWORD=your-password
 export OPENCODE_CORS=http://localhost:5173,https://app.example.com
+docker compose up -d --build
+```
+
+使用默认固定模板：
+
+```bash
+export OPENCODE_PROVIDER_ID=myprovider
+export OPENCODE_PROVIDER_BASE_URL=https://api.myprovider.com/v1
+export OPENCODE_PROVIDER_API_KEY=your-api-key
+export OPENCODE_MODEL_ID=my-model-name
 docker compose up -d --build
 ```

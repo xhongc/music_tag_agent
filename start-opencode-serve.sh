@@ -28,7 +28,7 @@ write_openai_compatible_config() {
   provider_npm="${OPENCODE_PROVIDER_NPM:-@ai-sdk/openai-compatible}"
   provider_name="${OPENCODE_PROVIDER_NAME:-$provider_id}"
   provider_base_url="${OPENCODE_PROVIDER_BASE_URL:-https://api.myprovider.com/v1}"
-  provider_api_key_env="${OPENCODE_PROVIDER_API_KEY_ENV:-ANTHROPIC_API_KEY}"
+  provider_api_key="${OPENCODE_PROVIDER_API_KEY:-}"
   provider_authorization="${OPENCODE_PROVIDER_AUTHORIZATION:-}"
   model_id="${OPENCODE_MODEL_ID:-my-model-name}"
   model_name="${OPENCODE_MODEL_NAME:-$model_id}"
@@ -53,7 +53,7 @@ write_openai_compatible_config() {
     printf '      "name": %s,\n' "$(json_string "$provider_name")"
     printf '      "options": {\n'
     printf '        "baseURL": %s,\n' "$(json_string "$provider_base_url")"
-    printf '        "apiKey": %s' "$(json_string "{env:$provider_api_key_env}")"
+    printf '        "apiKey": %s' "$(json_string "$provider_api_key")"
     if [ -n "$provider_authorization" ]; then
       printf ',\n'
       printf '        "headers": {\n'
