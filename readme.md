@@ -142,6 +142,8 @@ docker run --rm -p 9002:9002 \
 - `OPENCODE_MODEL_NAME`：model 显示名称，默认等于 `OPENCODE_MODEL_ID`
 - `OPENCODE_MODEL_CONTEXT`：可选，上下文限制；默认不写入 `limit`
 - `OPENCODE_MODEL_OUTPUT`：可选，输出限制；默认不写入 `limit`
+- `MCP_URL`：Music Tag MCP 地址，默认 `http://music-tag:8002/mcp/`
+- `MCP_ACCESS_TOKEN`：可选，Music Tag 系统 access token；传入后写入 `mcp.music-tag.headers.Authorization`，为空时不写入 `headers`；未以 `Bearer ` 开头时会自动补上
 
 ### 示例1
 

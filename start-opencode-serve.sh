@@ -34,6 +34,16 @@ write_openai_compatible_config() {
   model_name="${OPENCODE_MODEL_NAME:-$model_id}"
   model_context="${OPENCODE_MODEL_CONTEXT:-}"
   model_output="${OPENCODE_MODEL_OUTPUT:-}"
+  mcp_url="${MCP_URL:-http://music-tag:8002/mcp/}"
+  mcp_access_token="${MCP_ACCESS_TOKEN:-}"
+  mcp_authorization=""
+
+  if [ -n "$mcp_access_token" ]; then
+    case "$mcp_access_token" in
+      Bearer\ *) mcp_authorization="$mcp_access_token" ;;
+      *) mcp_authorization="Bearer $mcp_access_token" ;;
+    esac
+  fi
 
   case "$model_context" in
     *[!0-9]*) echo "OPENCODE_MODEL_CONTEXT must be a positive integer" >&2; exit 1 ;;
@@ -85,6 +95,21 @@ write_openai_compatible_config() {
     fi
     printf '        }\n'
     printf '      }\n'
+    printf '    }\n'
+    printf '  },\n'
+    printf '  "mcp": {\n'
+    printf '    "music-tag": {\n'
+    printf '      "type": "remote",\n'
+    printf '      "url": %s,\n' "$(json_string "$mcp_url")"
+    printf '      "enabled": true'
+    if [ -n "$mcp_authorization" ]; then
+      printf ',\n'
+      printf '      "headers": {\n'
+      printf '        "Authorization": %s\n' "$(json_string "$mcp_authorization")"
+      printf '      }\n'
+    else
+      printf '\n'
+    fi
     printf '    }\n'
     printf '  }\n'
     printf '}\n'

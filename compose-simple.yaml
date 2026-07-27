@@ -23,6 +23,8 @@ services:
       OPENCODE_PROVIDER_BASE_URL: ${OPENCODE_PROVIDER_BASE_URL:-https://api.deepseek.com/v1}
       OPENCODE_PROVIDER_API_KEY: ${OPENCODE_PROVIDER_API_KEY:-ANTHROPIC_API_KEY}
       OPENCODE_MODEL_ID: ${OPENCODE_MODEL_ID:-my-model-name}
+      MCP_URL: ${MCP_URL:-http://music-tag:8002/mcp/}
+      MCP_ACCESS_TOKEN: ${MCP_ACCESS_TOKEN:-}
     # 如果使用 OPENCODE_CONFIG_TEMPLATE=compatible，可以不挂载 opencode.json。
     # volumes:
     #  - /Users/macbookair/coding/compose/ai_story_config/opencode_mtw.json:/home/opencode/.config/opencode/opencode.json

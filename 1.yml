@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  music-tag:
+    image: xhongc/music_tag_web:latest
+    container_name: music-tag-web
+    ports:
+      - "8002:8002"
+    volumes:
+      - /path/to/your/music:/app/media
+      - /path/to/your/config:/app/data
+      - /path/to/your/download:/app/download
+    environment:
+      - AGENT_URL=http://music-tag-agent:9002
+    restart: always
+ 
+
+  music-tag-agent:
+    image: xhongc/music_tag_agent:latest
+    container_name: music-tag-agent
+    ports:
+      - "9002:9002"
+    volumes:
+      - /path/to/your/opencode.json:/home/opencode/.config/opencode/opencode.json
+    restart: unless-stopped
+    environment:
+      - OPENCODE_SERVER_USERNAME=admin
+      - OPENCODE_SERVER_PASSWORD=admin123
+      - OPENCODE_PROVIDER_ID=my
+      - OPENCODE_PROVIDER_BASE_URL=https://api.deepseek.com/v1
+      - OPENCODE_PROVIDER_API_KEY=sk-xxx
+      - OPENCODE_MODEL_ID=deepseek-v4-flash
