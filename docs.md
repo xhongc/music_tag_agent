@@ -2,7 +2,7 @@
 
 本文适用于已经通过 Docker Compose 部署 Music Tag Web 的用户。目标是在现有 `music-tag` 服务旁边新增一个 `music-tag-agent` 服务，并让 MTW 右下角的 AI 助手连接到该 Agent。
 
-推荐优先使用环境变量部署 Agent。Agent 启动时会根据环境变量自动生成 OpenCode 配置文件，无需手动创建或挂载 `opencode.json`。用户只需要填写模型服务地址、API Key 和模型 ID。
+推荐优先使用环境变量部署 Agent。Agent 启动时会根据环境变量自动生成 OpenCode 配置文件，无需手动创建或挂载 `opencode.json`。用户只需要填写模型服务地址、API Key 和模型 ID；如需配置多个模型，`OPENCODE_MODEL_ID` 使用英文逗号分隔。
 
 ## 1. 原始 Music Tag Web 配置
 
@@ -59,7 +59,9 @@ services:
       - OPENCODE_PROVIDER_ID=my
       - OPENCODE_PROVIDER_BASE_URL=https://api.deepseek.com/v1
       - OPENCODE_PROVIDER_API_KEY=sk-xxx
-      - OPENCODE_MODEL_ID=deepseek-v4-flash
+      - OPENCODE_MODEL_ID=deepseek-v4-flash,qwen3-coder
+      - MCP_URL=http://music-tag:8002/mcp/
+      - MCP_ACCESS_TOKEN=
 ```
 
 其中，下面这些路径需要替换为你自己的实际目录：
@@ -74,14 +76,16 @@ services:
 
 - `AGENT_URL`：MTW 访问 Agent 的地址。使用上面的 Compose 服务名时填写 `http://music-tag-agent:9002`。
 
-`music-tag-agent` 容器只需要配置下面 6 个变量：
+`music-tag-agent` 容器主要配置下面这些变量：
 
 - `OPENCODE_SERVER_USERNAME`：Agent 登录账号。示例使用 `admin`。
 - `OPENCODE_SERVER_PASSWORD`：Agent 登录密码。建议改成更复杂的密码，避免 9002 端口暴露后被他人调用模型 API。
 - `OPENCODE_PROVIDER_ID`：模型服务的 provider 标识。示例使用 `my`，后续在 MTW 中填写同一个 provider。
 - `OPENCODE_PROVIDER_BASE_URL`：OpenAI 兼容接口地址。DeepSeek 示例为 `https://api.deepseek.com/v1`。
 - `OPENCODE_PROVIDER_API_KEY`：模型服务 API Key。把 `sk-xxx` 替换为你自己的 Key。
-- `OPENCODE_MODEL_ID`：要使用的模型 ID。示例为 `deepseek-v4-flash`，需要和你的模型服务支持的模型名一致。
+- `OPENCODE_MODEL_ID`：要使用的模型 ID。示例为 `deepseek-v4-flash`，需要和你的模型服务支持的模型名一致；支持英文逗号分隔多个模型，例如 `deepseek-v4-flash,qwen3-coder`。
+- `MCP_URL`：Music Tag Web 的 MCP 服务地址。使用上面的 Compose 服务名时填写 `http://music-tag:8002/mcp/`；如果 Agent 和 MTW 不在同一个 Compose 网络中，需要改成 Agent 容器可访问的 MTW MCP 地址。
+- `MCP_ACCESS_TOKEN`：可选，Music Tag Web 的 access token。MTW 未开启或不需要 MCP 鉴权时留空；填写后 Agent 会通过 `Authorization: Bearer <token>` 请求 MCP 服务，未带 `Bearer ` 前缀时会自动补上。
 
 配置 `OPENCODE_SERVER_USERNAME` 和 `OPENCODE_SERVER_PASSWORD` 后，需要在 MTW 的 `系统设置 - API 管理` 中填写相同的 Agent 账号和密码。
 
@@ -121,6 +125,6 @@ docker logs -f music-tag-agent
 - Agent 账号填写 `OPENCODE_SERVER_USERNAME` 的值。
 - Agent 密码填写 `OPENCODE_SERVER_PASSWORD` 的值。
 - Provider ID 填写 `OPENCODE_PROVIDER_ID` 的值，例如 `my`。
-- Model ID 填写 `OPENCODE_MODEL_ID` 的值，例如 `deepseek-v4-flash`。
+- Model ID 填写 `OPENCODE_MODEL_ID` 中需要使用的某一个模型值，例如 `deepseek-v4-flash`。
 
 保存后，右下角 AI 助手即可连接到 `music-tag-agent`。

@@ -138,8 +138,8 @@ docker run --rm -p 9002:9002 \
 - `OPENCODE_PROVIDER_BASE_URL`：provider API 地址
 - `OPENCODE_PROVIDER_API_KEY`：provider API Key，直接写入 `options.apiKey`
 - `OPENCODE_PROVIDER_AUTHORIZATION`：可选，写入 `headers.Authorization`；默认不写入 `headers`
-- `OPENCODE_MODEL_ID`：model key，默认 `my-model-name`
-- `OPENCODE_MODEL_NAME`：model 显示名称，默认等于 `OPENCODE_MODEL_ID`
+- `OPENCODE_MODEL_ID`：model key，默认 `my-model-name`；支持用逗号配置多个模型，例如 `deepseek-v4-flash,qwen3-coder`
+- `OPENCODE_MODEL_NAME`：model 显示名称，默认等于 `OPENCODE_MODEL_ID`；配置多个模型时也可用逗号按顺序指定显示名称
 - `OPENCODE_MODEL_CONTEXT`：可选，上下文限制；默认不写入 `limit`
 - `OPENCODE_MODEL_OUTPUT`：可选，输出限制；默认不写入 `limit`
 - `MCP_URL`：Music Tag MCP 地址，默认 `http://music-tag:8002/mcp/`
@@ -163,7 +163,7 @@ docker run --rm -p 9002:9002 \
   -e OPENCODE_PROVIDER_ID=myprovider \
   -e OPENCODE_PROVIDER_BASE_URL=https://api.myprovider.com/v1 \
   -e OPENCODE_PROVIDER_API_KEY=your-api-key \
-  -e OPENCODE_MODEL_ID=my-model-name \
+  -e OPENCODE_MODEL_ID=my-model-name,backup-model-name \
   ai_story-agent
 ```
 
@@ -230,6 +230,6 @@ docker compose up -d --build
 export OPENCODE_PROVIDER_ID=myprovider
 export OPENCODE_PROVIDER_BASE_URL=https://api.myprovider.com/v1
 export OPENCODE_PROVIDER_API_KEY=your-api-key
-export OPENCODE_MODEL_ID=my-model-name
+export OPENCODE_MODEL_ID=my-model-name,backup-model-name
 docker compose up -d --build
 ```

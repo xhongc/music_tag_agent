@@ -23,6 +23,38 @@ json_string() {
   '
 }
 
+trim_whitespace() {
+  printf '%s' "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+write_model_config_entry() {
+  entry_model_id="$1"
+  entry_model_name="$2"
+  entry_model_context="$3"
+  entry_model_output="$4"
+
+  printf '        %s: {\n' "$(json_string "$entry_model_id")"
+  printf '          "name": %s' "$(json_string "$entry_model_name")"
+  if [ -n "$entry_model_context" ] || [ -n "$entry_model_output" ]; then
+    printf ',\n'
+    printf '          "limit": {\n'
+    if [ -n "$entry_model_context" ]; then
+      printf '            "context": %s' "$entry_model_context"
+      if [ -n "$entry_model_output" ]; then
+        printf ','
+      fi
+      printf '\n'
+    fi
+    if [ -n "$entry_model_output" ]; then
+      printf '            "output": %s\n' "$entry_model_output"
+    fi
+    printf '          }\n'
+  else
+    printf '\n'
+  fi
+  printf '        }'
+}
+
 write_openai_compatible_config() {
   provider_id="${OPENCODE_PROVIDER_ID:-myprovider}"
   provider_npm="${OPENCODE_PROVIDER_NPM:-@ai-sdk/openai-compatible}"
@@ -53,6 +85,22 @@ write_openai_compatible_config() {
     *[!0-9]*) echo "OPENCODE_MODEL_OUTPUT must be a positive integer" >&2; exit 1 ;;
   esac
 
+  model_count=0
+  old_ifs=$IFS
+  IFS=','
+  for raw_model_id in $model_id; do
+    current_model_id=$(trim_whitespace "$raw_model_id")
+    if [ -n "$current_model_id" ]; then
+      model_count=$((model_count + 1))
+    fi
+  done
+  IFS=$old_ifs
+
+  if [ "$model_count" -eq 0 ]; then
+    echo "OPENCODE_MODEL_ID must include at least one model id" >&2
+    exit 1
+  fi
+
   mkdir -p "$(dirname "$CONFIG_FILE")"
   {
     printf '{\n'
@@ -74,26 +122,39 @@ write_openai_compatible_config() {
     fi
     printf '      },\n'
     printf '      "models": {\n'
-    printf '        %s: {\n' "$(json_string "$model_id")"
-    printf '          "name": %s' "$(json_string "$model_name")"
-    if [ -n "$model_context" ] || [ -n "$model_output" ]; then
-      printf ',\n'
-      printf '          "limit": {\n'
-      if [ -n "$model_context" ]; then
-        printf '            "context": %s' "$model_context"
-        if [ -n "$model_output" ]; then
-          printf ','
-        fi
-        printf '\n'
+    old_ifs=$IFS
+    IFS=','
+    first_model=1
+    remaining_model_names=$model_name
+    for raw_model_id in $model_id; do
+      current_model_id=$(trim_whitespace "$raw_model_id")
+      if [ -z "$current_model_id" ]; then
+        continue
       fi
-      if [ -n "$model_output" ]; then
-        printf '            "output": %s\n' "$model_output"
+
+      case "$remaining_model_names" in
+        *,*)
+          current_model_name=$(trim_whitespace "${remaining_model_names%%,*}")
+          remaining_model_names=${remaining_model_names#*,}
+          ;;
+        *)
+          current_model_name=$(trim_whitespace "$remaining_model_names")
+          remaining_model_names=""
+          ;;
+      esac
+      if [ -z "$current_model_name" ]; then
+        current_model_name=$current_model_id
       fi
-      printf '          }\n'
-    else
+
+      if [ "$first_model" -eq 1 ]; then
+        first_model=0
+      else
+        printf ',\n'
+      fi
+      write_model_config_entry "$current_model_id" "$current_model_name" "$model_context" "$model_output"
       printf '\n'
-    fi
-    printf '        }\n'
+    done
+    IFS=$old_ifs
     printf '      }\n'
     printf '    }\n'
     printf '  },\n'

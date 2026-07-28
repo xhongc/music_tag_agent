@@ -29,4 +29,4 @@ services:
       - OPENCODE_PROVIDER_ID=my
       - OPENCODE_PROVIDER_BASE_URL=https://api.deepseek.com/v1
       - OPENCODE_PROVIDER_API_KEY=sk-xxx
-      - OPENCODE_MODEL_ID=deepseek-v4-flash
+      - OPENCODE_MODEL_ID=deepseek-v4-flash,qwen3-coder
