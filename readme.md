@@ -233,3 +233,5 @@ export OPENCODE_PROVIDER_API_KEY=your-api-key
 export OPENCODE_MODEL_ID=my-model-name,backup-model-name
 docker compose up -d --build
 ```
+
+docker build . -t xhongc/music_tag_agent
